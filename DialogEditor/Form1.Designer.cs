@@ -116,13 +116,14 @@
             // displayTextToolStripMenuItem
             // 
             this.displayTextToolStripMenuItem.Name = "displayTextToolStripMenuItem";
-            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.displayTextToolStripMenuItem.Text = "Display Text";
+            this.displayTextToolStripMenuItem.Click += new System.EventHandler(this.addDisplayTextToolStripMenuItem_Click);
             // 
             // dialogOptionToolStripMenuItem
             // 
             this.dialogOptionToolStripMenuItem.Name = "dialogOptionToolStripMenuItem";
-            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.dialogOptionToolStripMenuItem.Text = "Option";
             // 
             // lblStatus

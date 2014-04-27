@@ -28,12 +28,19 @@ namespace DialogEditor
         {
             //We're adding a new Display Text node to the convTree
             TreeNode selectedNode = convTree.SelectedNode;
+            dialogTreeNode dNode = (dialogTreeNode)selectedNode;
             dNodeDisplayText newNode = new dNodeDisplayText();
 
 
-            newNode.Text = "Display Text";
-            newNode.dispText = "123";
-            selectedNode.Nodes.Add(newNode);
+            newNode.Text = "[Display Text]";
+            newNode.dispText = "";
+
+            //if we're currently selecting a Display Text node then just place this node after
+            //the current node, instead of as a child.
+            if (dNode.sType == dNodeType.displayText)
+                selectedNode.Parent.Nodes.Add(newNode);
+            else
+                selectedNode.Nodes.Add(newNode);
             
             selectedNode.Expand();
             
@@ -55,6 +62,10 @@ namespace DialogEditor
                 case dNodeType.displayText:
                     dNodeDisplayText dispTextNode = (dNodeDisplayText)dNode;
                     dispTextNode.dispText = textBox1.Text;
+                    if (textBox1.Text.Trim() != "")
+                        dispTextNode.Text = textBox1.Text;
+                    else
+                        dispTextNode.Text = "[Display Text]";
                     break;
             }
 
@@ -73,6 +84,7 @@ namespace DialogEditor
                 case dNodeType.displayText:
                     dNodeDisplayText selectedNode = (dNodeDisplayText)convTree.SelectedNode;
                     textBox1.Text = selectedNode.dispText;
+
                     break;
             }
 
