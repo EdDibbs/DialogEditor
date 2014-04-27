@@ -39,16 +39,19 @@
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dialogOptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblStatus = new System.Windows.Forms.Label();
             this.contextStripTree = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addDisplayTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addDialogOptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.convTree = new System.Windows.Forms.TreeView();
             this.nodePropBox = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.contextStripTree.SuspendLayout();
             this.nodePropBox.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -77,31 +80,33 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveFile);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveFileAs);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // addToolStripMenuItem
@@ -116,25 +121,15 @@
             // displayTextToolStripMenuItem
             // 
             this.displayTextToolStripMenuItem.Name = "displayTextToolStripMenuItem";
-            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.displayTextToolStripMenuItem.Text = "Display Text";
             this.displayTextToolStripMenuItem.Click += new System.EventHandler(this.addDisplayTextToolStripMenuItem_Click);
             // 
             // dialogOptionToolStripMenuItem
             // 
             this.dialogOptionToolStripMenuItem.Name = "dialogOptionToolStripMenuItem";
-            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.dialogOptionToolStripMenuItem.Text = "Option";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(2, 346);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(110, 13);
-            this.lblStatus.TabIndex = 1;
-            this.lblStatus.Text = "Status stuff goes here";
             // 
             // contextStripTree
             // 
@@ -143,7 +138,6 @@
             this.addDialogOptionToolStripMenuItem});
             this.contextStripTree.Name = "contextMenuStrip1";
             this.contextStripTree.Size = new System.Drawing.Size(174, 48);
-            this.contextStripTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // addDisplayTextToolStripMenuItem
             // 
@@ -193,14 +187,29 @@
             this.textBox1.Size = new System.Drawing.Size(700, 74);
             this.textBox1.TabIndex = 0;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStripLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 340);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(738, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusStripLabel
+            // 
+            this.statusStripLabel.Name = "statusStripLabel";
+            this.statusStripLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 362);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.nodePropBox);
             this.Controls.Add(this.convTree);
-            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(500, 400);
@@ -212,6 +221,8 @@
             this.contextStripTree.ResumeLayout(false);
             this.nodePropBox.ResumeLayout(false);
             this.nodePropBox.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -229,13 +240,15 @@
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dialogOptionToolStripMenuItem;
-        private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.ContextMenuStrip contextStripTree;
         private System.Windows.Forms.TreeView convTree;
         private System.Windows.Forms.ToolStripMenuItem addDisplayTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addDialogOptionToolStripMenuItem;
         private System.Windows.Forms.GroupBox nodePropBox;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel statusStripLabel;
     }
 }
 

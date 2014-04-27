@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace DialogEditor
 {
@@ -17,12 +18,11 @@ namespace DialogEditor
         public Form1()
         {
             InitializeComponent();
+            SavePath = "";
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
+        private string SavePath;
 
-        }
 
         private void addDisplayTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -68,7 +68,7 @@ namespace DialogEditor
                         dispTextNode.Text = "[Display Text]";
                     break;
             }
-
+            
         }
 
 
@@ -97,8 +97,36 @@ namespace DialogEditor
             convTree.Nodes[0].Text = "Conversation Root";
         }
 
+        
 
 
+        private void saveFile(object sender, EventArgs e)
+        {
+            //if we don't already have a save path then get one
+            if (SavePath == "")
+            {
+                SaveFileAs(sender, e);
+                return;
+            }
+
+            statusStripLabel.Text = "File Saved to " + SavePath;
+        }
+
+        private void SaveFileAs(object sender, EventArgs e)
+        {
+            //Get the save path from them
+            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SavePath = saveFileDialog1.FileName;
+            }
+            else //we clicked cancel on the save location
+            {
+                statusStripLabel.Text = "No path selected. Save operation canceled.";
+                return;
+            }
+
+            saveFile(sender, e);
+        }
 
     }
 
