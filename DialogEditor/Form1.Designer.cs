@@ -167,6 +167,7 @@
             this.convTree.Name = "convTree";
             this.convTree.Size = new System.Drawing.Size(713, 203);
             this.convTree.TabIndex = 2;
+            this.convTree.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.convTree_BeforeSelect);
             this.convTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.convTree_AfterSelect);
             // 
             // nodePropBox
