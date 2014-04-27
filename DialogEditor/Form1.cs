@@ -28,7 +28,7 @@ namespace DialogEditor
         {
             //We're adding a new Display Text node to the convTree
             TreeNode selectedNode = convTree.SelectedNode;
-            dialogTreeDisplayText newNode = new dialogTreeDisplayText();
+            dNodeDisplayText newNode = new dNodeDisplayText();
 
 
             newNode.Text = "Display Text";
@@ -42,7 +42,21 @@ namespace DialogEditor
 
         private void convTree_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
+            //if we didn't have anything selected (form just loaded) don't bother doing anything
+            if (convTree.SelectedNode == null) return;
+
             //save what the user typed in the textbox, associate with the selected node
+            dialogTreeNode dNode = (dialogTreeNode)convTree.SelectedNode;
+
+
+            //based on what kind of node we have we'll save accordingly
+            switch (dNode.sType)
+            {
+                case dNodeType.displayText:
+                    dNodeDisplayText dispTextNode = (dNodeDisplayText)dNode;
+                    dispTextNode.dispText = textBox1.Text;
+                    break;
+            }
 
         }
 
@@ -57,7 +71,7 @@ namespace DialogEditor
             switch (dNode.sType)
             {
                 case dNodeType.displayText:
-                    dialogTreeDisplayText selectedNode = (dialogTreeDisplayText)convTree.SelectedNode;
+                    dNodeDisplayText selectedNode = (dNodeDisplayText)convTree.SelectedNode;
                     textBox1.Text = selectedNode.dispText;
                     break;
             }
@@ -84,9 +98,9 @@ namespace DialogEditor
         public dNodeType sType { get; set; } //sType will allow us to typecast to get all our info back
     }
 
-    public class dialogTreeDisplayText : dialogTreeNode
+    public class dNodeDisplayText : dialogTreeNode
     {
-        public dialogTreeDisplayText() 
+        public dNodeDisplayText() 
             : base(dNodeType.displayText) {}
 
         public string dispText
