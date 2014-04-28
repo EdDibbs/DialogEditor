@@ -18,11 +18,18 @@ namespace DialogEditor
         public Form1()
         {
             InitializeComponent();
-            SavePath = "";
+            SaveFilePath = "";
+            saveFileDialog1.Filter = "XML Files | *.xml";
+            saveFileDialog1.DefaultExt = "xml";
+
+            //Start the user with a root node
+            convTree.Nodes.Add(new dialogTreeNode(dNodeType.root));
+            convTree.Nodes[0].Text = "Conversation Root";
+
         }
 
-        private string SavePath;
-
+        private string SaveFilePath;
+        private string SaveFileName;
 
         private void addDisplayTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -92,9 +99,7 @@ namespace DialogEditor
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //Start the user with a root node
-            convTree.Nodes.Add(new dialogTreeNode(dNodeType.root));
-            convTree.Nodes[0].Text = "Conversation Root";
+
         }
 
         
@@ -103,21 +108,51 @@ namespace DialogEditor
         private void saveFile(object sender, EventArgs e)
         {
             //if we don't already have a save path then get one
-            if (SavePath == "")
+            if (SaveFilePath == "")
             {
                 SaveFileAs(sender, e);
                 return;
             }
+            
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            XmlWriter writer = XmlWriter.Create(SaveFilePath + SaveFileName,settings);
+            writer.WriteStartDocument();
 
-            statusStripLabel.Text = "File Saved to " + SavePath;
+            //recursively go through the tree           
+
+
+            writer.WriteEndDocument();
+            writer.Flush();
+            writer.Close();
+
+
+            statusStripLabel.Text = "File Saved to " + SaveFilePath + SaveFileName;
         }
 
         private void SaveFileAs(object sender, EventArgs e)
         {
+
+
             //Get the save path from them
             if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SavePath = saveFileDialog1.FileName;
+                
+                string SavePathTemp = saveFileDialog1.FileName;
+ 
+                //split the path and the filename into two separate strings
+                string[] result;
+                result = SavePathTemp.Split('\\');
+                int dirCount = result.GetLength(0);
+
+                for (int i = 0; i < dirCount - 1; i++)
+                {
+                    SaveFilePath += result[i];
+                    SaveFilePath += '\\';
+                }
+                SaveFileName = result[dirCount - 1];
+
+                
             }
             else //we clicked cancel on the save location
             {
