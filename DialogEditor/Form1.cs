@@ -120,7 +120,7 @@ namespace DialogEditor
             writer.WriteStartDocument();
 
             //recursively go through the tree           
-
+            SaveNode(ref writer, convTree.Nodes[0]);
 
             writer.WriteEndDocument();
             writer.Flush();
@@ -128,6 +128,48 @@ namespace DialogEditor
 
 
             statusStripLabel.Text = "File Saved to " + SaveFilePath + SaveFileName;
+        }
+
+        private void SaveNode(ref XmlWriter writer, TreeNode node)
+        {
+            //we will loop through the tree using Depth First Search
+            dialogTreeNode dNode = (dialogTreeNode)node;
+
+            //print the start element e.g. <text>
+            switch (dNode.sType)
+            {
+                case dNodeType.root:
+                    writer.WriteStartElement("conversation");
+                    break;
+
+                case dNodeType.displayText:
+                    string text = ((dNodeDisplayText)dNode).dispText;
+                    writer.WriteStartElement("text");
+                    break;
+            }
+
+            //go deeper if we need to
+            if (node.Nodes != null)
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    SaveNode(ref writer, childNode);
+                }
+
+            //print the content
+            switch (dNode.sType)
+            {
+                case dNodeType.root:
+                    writer.WriteEndElement();
+                    break;
+
+                case dNodeType.displayText:
+                    string text = ((dNodeDisplayText)dNode).dispText;
+                    writer.WriteRaw("\"" + text + "\"");
+                    writer.WriteEndElement();
+                    break;
+            }
+
+
         }
 
         private void SaveFileAs(object sender, EventArgs e)
