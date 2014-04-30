@@ -50,6 +50,7 @@ namespace DialogEditor
                 selectedNode.Nodes.Add(newNode);
             
             selectedNode.Expand();
+            convTree.SelectedNode = newNode;
             
         }
 
