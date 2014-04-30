@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace DialogEditor
 {
-    public enum dNodeType { root, displayText }
+    public enum dNodeType { root, displayText, responseContainer, userResponse}
 
     public partial class Form1 : Form
     {
@@ -39,21 +39,67 @@ namespace DialogEditor
             dNodeDisplayText newNode = new dNodeDisplayText();
 
 
-            newNode.Text = "[Display Text]";
-            newNode.dispText = "";
+            switch (dNode.sType)
+            { 
 
-            //if we're currently selecting a Display Text node then just place this node after
-            //the current node, instead of as a child.
-            if (dNode.sType == dNodeType.displayText)
-                selectedNode.Parent.Nodes.Add(newNode);
-            else
-                selectedNode.Nodes.Add(newNode);
-            
+                case dNodeType.displayText:
+                    //if we're currently selecting a Display Text node then just place this node after
+                    //the current node, instead of as a child.
+                    selectedNode.Parent.Nodes.Add(newNode);
+                    break;
+
+                case dNodeType.responseContainer:
+                    //we shouldn't be adding anything to this node
+                    statusStripLabel.Text = "Can't add items other than options to an option container.";
+                    return;
+                    break;
+
+                default:
+                    selectedNode.Nodes.Add(newNode);
+                    break;
+            }
+
             selectedNode.Expand();
             convTree.SelectedNode = newNode;
             
         }
 
+        private void addDialogOptionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode selectedNode = convTree.SelectedNode;
+            dialogTreeNode dNode = (dialogTreeNode)selectedNode;
+
+            //add a container for our responses if we don't already have one
+            switch (dNode.sType)
+            {
+                case dNodeType.responseContainer:
+                    //we don't need to do anything extra
+                    break;
+                case dNodeType.userResponse:
+                    //we need to select the parent (the response container node) first
+                    selectedNode = selectedNode.Parent;
+                    break;
+
+
+                default:
+                    //if we had a display text node, we need to selecte the parent before
+                    //making the response container
+                    if (dNode.sType == dNodeType.displayText) selectedNode = selectedNode.Parent;
+
+                    //we need to make a response container first
+                    dialogTreeNode container = new dialogTreeNode(dNodeType.responseContainer);
+                    container.Text = "[Display Options]";
+                    selectedNode.Nodes.Add(container);
+                    selectedNode.Expand();
+                    selectedNode = container;
+                    break;
+            }
+
+            //add a dialog option now
+            dNodeUserResponse responseNode = new dNodeUserResponse();
+            selectedNode.Nodes.Add(responseNode);
+            selectedNode.Expand();
+        }
 
         private void convTree_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
@@ -70,10 +116,22 @@ namespace DialogEditor
                 case dNodeType.displayText:
                     dNodeDisplayText dispTextNode = (dNodeDisplayText)dNode;
                     dispTextNode.dispText = textBox1.Text;
+
+                    //if the text box is empty, we'll set the treeview text to default
+                    //otherwise we'll set it to what the response is
                     if (textBox1.Text.Trim() != "")
                         dispTextNode.Text = textBox1.Text;
                     else
                         dispTextNode.Text = "[Display Text]";
+                    break;
+
+                case dNodeType.userResponse:
+                    dNodeUserResponse responseNode = (dNodeUserResponse)dNode;
+                    responseNode.responseText = textBox1.Text;
+                    if (textBox1.Text.Trim() != "")
+                        responseNode.Text = textBox1.Text;
+                    else
+                        responseNode.Text = "[User Response]";
                     break;
             }
             
@@ -90,9 +148,14 @@ namespace DialogEditor
             switch (dNode.sType)
             {
                 case dNodeType.displayText:
-                    dNodeDisplayText selectedNode = (dNodeDisplayText)convTree.SelectedNode;
-                    textBox1.Text = selectedNode.dispText;
+                    dNodeDisplayText dispText = (dNodeDisplayText)convTree.SelectedNode;
+                    textBox1.Text = dispText.dispText;
 
+                    break;
+
+                case dNodeType.userResponse:
+                    dNodeUserResponse userResponse = (dNodeUserResponse)convTree.SelectedNode;
+                    textBox1.Text = userResponse.responseText;
                     break;
             }
 
@@ -144,9 +207,19 @@ namespace DialogEditor
                     break;
 
                 case dNodeType.displayText:
-                    string text = ((dNodeDisplayText)dNode).dispText;
                     writer.WriteStartElement("text");
                     break;
+
+                case dNodeType.responseContainer:
+                    writer.WriteStartElement("option_container");
+                    break;
+
+                case dNodeType.userResponse:
+                    string responseText = ((dNodeUserResponse)dNode).responseText;
+                    writer.WriteStartElement("option");
+                    writer.WriteAttributeString("text", responseText);
+                    break;
+
             }
 
             //go deeper if we need to
@@ -156,7 +229,7 @@ namespace DialogEditor
                     SaveNode(ref writer, childNode);
                 }
 
-            //print the content
+            //print the content and end the element e.g. "foobar"<\text>
             switch (dNode.sType)
             {
                 case dNodeType.root:
@@ -166,6 +239,15 @@ namespace DialogEditor
                 case dNodeType.displayText:
                     string text = ((dNodeDisplayText)dNode).dispText;
                     writer.WriteRaw("\"" + text + "\"");
+                    writer.WriteEndElement();
+                    break;
+
+                case dNodeType.responseContainer:
+                    writer.WriteEndElement();
+                    break;
+
+                case dNodeType.userResponse:
+                    //don't need to do anything else
                     writer.WriteEndElement();
                     break;
             }
@@ -206,6 +288,8 @@ namespace DialogEditor
             saveFile(sender, e);
         }
 
+
+
     }
 
 
@@ -218,11 +302,19 @@ namespace DialogEditor
 
     public class dNodeDisplayText : dialogTreeNode
     {
-        public dNodeDisplayText() 
-            : base(dNodeType.displayText) {}
+        public dNodeDisplayText()
+            : base(dNodeType.displayText) { dispText = ""; Text = "[Display Text]"; }
 
-        public string dispText
-        { get; set; }
+        public string dispText  { get; set; }
 
     }
+
+    public class dNodeUserResponse : dialogTreeNode
+    {
+        public dNodeUserResponse()
+            : base(dNodeType.userResponse) { responseText = ""; Text = "[User Response]"; }
+
+        public string responseText { get; set; }
+    }
+
 }

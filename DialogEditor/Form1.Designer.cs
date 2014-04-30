@@ -137,7 +137,7 @@
             this.addDisplayTextToolStripMenuItem,
             this.addDialogOptionToolStripMenuItem});
             this.contextStripTree.Name = "contextMenuStrip1";
-            this.contextStripTree.Size = new System.Drawing.Size(174, 48);
+            this.contextStripTree.Size = new System.Drawing.Size(174, 70);
             // 
             // addDisplayTextToolStripMenuItem
             // 
@@ -151,6 +151,7 @@
             this.addDialogOptionToolStripMenuItem.Name = "addDialogOptionToolStripMenuItem";
             this.addDialogOptionToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.addDialogOptionToolStripMenuItem.Text = "Add Dialog Option";
+            this.addDialogOptionToolStripMenuItem.Click += new System.EventHandler(this.addDialogOptionToolStripMenuItem_Click);
             // 
             // convTree
             // 
