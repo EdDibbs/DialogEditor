@@ -44,7 +44,7 @@
             this.addDialogOptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.convTree = new System.Windows.Forms.TreeView();
             this.nodePropBox = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.propTextBox = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -80,33 +80,33 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveFile);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveFileAs);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // addToolStripMenuItem
@@ -121,14 +121,14 @@
             // displayTextToolStripMenuItem
             // 
             this.displayTextToolStripMenuItem.Name = "displayTextToolStripMenuItem";
-            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.displayTextToolStripMenuItem.Text = "Display Text";
             this.displayTextToolStripMenuItem.Click += new System.EventHandler(this.addDisplayTextToolStripMenuItem_Click);
             // 
             // dialogOptionToolStripMenuItem
             // 
             this.dialogOptionToolStripMenuItem.Name = "dialogOptionToolStripMenuItem";
-            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.dialogOptionToolStripMenuItem.Text = "Option";
             // 
             // contextStripTree
@@ -137,7 +137,7 @@
             this.addDisplayTextToolStripMenuItem,
             this.addDialogOptionToolStripMenuItem});
             this.contextStripTree.Name = "contextMenuStrip1";
-            this.contextStripTree.Size = new System.Drawing.Size(174, 70);
+            this.contextStripTree.Size = new System.Drawing.Size(174, 48);
             // 
             // addDisplayTextToolStripMenuItem
             // 
@@ -172,7 +172,7 @@
             // 
             this.nodePropBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.nodePropBox.Controls.Add(this.textBox1);
+            this.nodePropBox.Controls.Add(this.propTextBox);
             this.nodePropBox.Location = new System.Drawing.Point(13, 238);
             this.nodePropBox.Name = "nodePropBox";
             this.nodePropBox.Size = new System.Drawing.Size(713, 100);
@@ -180,15 +180,15 @@
             this.nodePropBox.TabStop = false;
             this.nodePropBox.Text = "Properties";
             // 
-            // textBox1
+            // propTextBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.propTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(7, 20);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(700, 74);
-            this.textBox1.TabIndex = 0;
+            this.propTextBox.Location = new System.Drawing.Point(7, 20);
+            this.propTextBox.Multiline = true;
+            this.propTextBox.Name = "propTextBox";
+            this.propTextBox.Size = new System.Drawing.Size(700, 74);
+            this.propTextBox.TabIndex = 0;
             // 
             // statusStrip1
             // 
@@ -248,7 +248,7 @@
         private System.Windows.Forms.ToolStripMenuItem addDisplayTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addDialogOptionToolStripMenuItem;
         private System.Windows.Forms.GroupBox nodePropBox;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox propTextBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusStripLabel;

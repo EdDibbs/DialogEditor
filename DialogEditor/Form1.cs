@@ -97,8 +97,10 @@ namespace DialogEditor
 
             //add a dialog option now
             dNodeUserResponse responseNode = new dNodeUserResponse();
-            selectedNode.Nodes.Add(responseNode);
+            //responseNode.NodeFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
+            int index = selectedNode.Nodes.Add(responseNode);
             selectedNode.Expand();
+            convTree.SelectedNode = selectedNode.Nodes[index];
         }
 
         private void convTree_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -115,21 +117,21 @@ namespace DialogEditor
             {
                 case dNodeType.displayText:
                     dNodeDisplayText dispTextNode = (dNodeDisplayText)dNode;
-                    dispTextNode.dispText = textBox1.Text;
+                    dispTextNode.dispText = propTextBox.Text;
 
                     //if the text box is empty, we'll set the treeview text to default
                     //otherwise we'll set it to what the response is
-                    if (textBox1.Text.Trim() != "")
-                        dispTextNode.Text = textBox1.Text;
+                    if (propTextBox.Text.Trim() != "")
+                        dispTextNode.Text = propTextBox.Text;
                     else
                         dispTextNode.Text = "[Display Text]";
                     break;
 
                 case dNodeType.userResponse:
                     dNodeUserResponse responseNode = (dNodeUserResponse)dNode;
-                    responseNode.responseText = textBox1.Text;
-                    if (textBox1.Text.Trim() != "")
-                        responseNode.Text = textBox1.Text;
+                    responseNode.responseText = propTextBox.Text;
+                    if (propTextBox.Text.Trim() != "")
+                        responseNode.Text = propTextBox.Text;
                     else
                         responseNode.Text = "[User Response]";
                     break;
@@ -141,7 +143,7 @@ namespace DialogEditor
         private void convTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //after we change focus in our convTree we need to clean up a bit
-            textBox1.Clear();
+            propTextBox.Clear();
             dialogTreeNode dNode = (dialogTreeNode)convTree.SelectedNode;
 
             //based on what kind of node we have, change our display accordingly
@@ -149,13 +151,21 @@ namespace DialogEditor
             {
                 case dNodeType.displayText:
                     dNodeDisplayText dispText = (dNodeDisplayText)convTree.SelectedNode;
-                    textBox1.Text = dispText.dispText;
-
+                    propTextBox.Text = dispText.dispText;
+                    nodePropBox.Text = "NPC Text";
+                    propTextBox.Show();
                     break;
 
                 case dNodeType.userResponse:
                     dNodeUserResponse userResponse = (dNodeUserResponse)convTree.SelectedNode;
-                    textBox1.Text = userResponse.responseText;
+                    propTextBox.Text = userResponse.responseText;
+                    nodePropBox.Text = "Player Response Text";
+                    propTextBox.Show();
+                    break;
+
+                case dNodeType.root:
+                    propTextBox.Hide();
+                    nodePropBox.Text = "";
                     break;
             }
 
