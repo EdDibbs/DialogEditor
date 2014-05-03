@@ -35,6 +35,36 @@ namespace DialogEditor
             addDisplayTextNode(null);
             
         }
+        private int addNodeAfter(TreeNode selectedNode, TreeNode newNode)
+        {
+            TreeNode parentNode = selectedNode.Parent;
+
+            int siblingNodeCount = parentNode.GetNodeCount(false);
+            int selectedNodeIndex = selectedNode.Index;
+            TreeNode siblingNode;
+
+            //loop through all the nodes in selectedNode.parent
+            for (int i = 0; i < siblingNodeCount; i++)
+            {
+                //We're simply looping through all the sibling nodes
+                //and placing them at the end of the tree.
+                //when we get to the node we want to insert at then we move the
+                //selected node to the end and put our new node behind it.
+                siblingNode = parentNode.Nodes[0];
+                parentNode.Nodes[0].Remove();
+                parentNode.Nodes.Add(siblingNode);
+
+                //once we pass selectedNode, add our newNode
+                if (i == selectedNodeIndex)
+                {
+                    parentNode.Nodes.Add(newNode);
+                }
+
+                //continue placing the old nodes into the parent node
+            }
+            return selectedNodeIndex + 1;
+        }
+
 
         private bool addDisplayTextNode(TreeNode selectedNode = null, dNodeDisplayText newNode = null) 
         {
@@ -57,8 +87,9 @@ namespace DialogEditor
                 case dNodeType.displayText:
                     //if we're currently selecting a Display Text node then just place this node after
                     //the current node, instead of as a child.
-                    selectedNode.Parent.Nodes.Add(newNode);
-                    break;
+                    //selectedNode.Parent.Nodes.Add(newNode);
+                    addNodeAfter(selectedNode, newNode);
+                        break;
 
                 case dNodeType.responseContainer:
                     //we shouldn't be adding anything to this node
@@ -96,44 +127,51 @@ namespace DialogEditor
             {
                 selectedNode = convTree.SelectedNode;
             }
+            if (newNode == null)
+            {
+                newNode = new dNodeUserResponse();
+            }
 
             dialogTreeNode dNode = (dialogTreeNode)selectedNode;
+            int newNodeIndex = 0;
 
             //add a container for our responses if we don't already have one
             switch (dNode.sType)
             {
                 case dNodeType.responseContainer:
                     //we don't need to do anything extra
+                    newNodeIndex = selectedNode.Nodes.Add(newNode);
                     break;
                 case dNodeType.userResponse:
                     //we need to select the parent (the response container node) first
+                    newNodeIndex = addNodeAfter(selectedNode, newNode);
                     selectedNode = selectedNode.Parent;
                     break;
 
 
                 default:
-                    //if we had a display text node, we need to selecte the parent before
+                    //if we had a display text node, we need to select the parent before
                     //making the response container
-                    if (dNode.sType == dNodeType.displayText) selectedNode = selectedNode.Parent;
+                    //if (dNode.sType == dNodeType.displayText) selectedNode = selectedNode.Parent;
 
                     //we need to make a response container first
                     dialogTreeNode container = new dialogTreeNode(dNodeType.responseContainer);
                     container.Text = "[Display Options]";
                     selectedNode.Nodes.Add(container);
+                    //addNodeAfter(selectedNode, container);
                     selectedNode.Expand();
                     selectedNode = container;
+
+                    newNodeIndex = selectedNode.Nodes.Add(newNode);
                     break;
             }
 
             //add a dialog option now
-            if (newNode == null)
-            {
-                newNode = new dNodeUserResponse();
-            }
 
-            int index = selectedNode.Nodes.Add(newNode);
+
+
             selectedNode.Expand();
-            convTree.SelectedNode = selectedNode.Nodes[index];
+            convTree.SelectedNode = selectedNode.Nodes[newNodeIndex];
 
             return true;
         }
@@ -203,7 +241,6 @@ namespace DialogEditor
                     nodePropBox.Text = "";
                     break;
             }
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -421,6 +458,7 @@ namespace DialogEditor
 
             //select it on the tree
             convTree.SelectedNode = convTree.GetNodeAt(Target);
+           
         }
 
         private void convTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
