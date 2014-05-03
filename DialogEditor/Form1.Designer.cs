@@ -80,33 +80,33 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveFile);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveFileAs);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // addToolStripMenuItem
@@ -121,14 +121,14 @@
             // displayTextToolStripMenuItem
             // 
             this.displayTextToolStripMenuItem.Name = "displayTextToolStripMenuItem";
-            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.displayTextToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.displayTextToolStripMenuItem.Text = "Display Text";
             this.displayTextToolStripMenuItem.Click += new System.EventHandler(this.addDisplayTextToolStripMenuItem_Click);
             // 
             // dialogOptionToolStripMenuItem
             // 
             this.dialogOptionToolStripMenuItem.Name = "dialogOptionToolStripMenuItem";
-            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dialogOptionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.dialogOptionToolStripMenuItem.Text = "Option";
             // 
             // contextStripTree
@@ -155,6 +155,7 @@
             // 
             // convTree
             // 
+            this.convTree.AllowDrop = true;
             this.convTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -165,8 +166,14 @@
             this.convTree.Name = "convTree";
             this.convTree.Size = new System.Drawing.Size(713, 203);
             this.convTree.TabIndex = 2;
+            this.convTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.convTree_ItemDrag);
             this.convTree.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.convTree_BeforeSelect);
             this.convTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.convTree_AfterSelect);
+            this.convTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.convTree_NodeMouseClick);
+            this.convTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.convTree_DragDrop);
+            this.convTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.convTree_DragEnter);
+            this.convTree.DragOver += new System.Windows.Forms.DragEventHandler(this.convTree_DragOver);
+            this.convTree.MouseClick += new System.Windows.Forms.MouseEventHandler(this.convTree_MouseClick);
             // 
             // nodePropBox
             // 

@@ -25,22 +25,34 @@ namespace DialogEditor
             //Start the user with a root node
             convTree.Nodes.Add(new dialogTreeNode(dNodeType.root));
             convTree.Nodes[0].Text = "Conversation Root";
-
         }
-
+        
         private string SaveFilePath;
         private string SaveFileName;
 
         private void addDisplayTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //We're adding a new Display Text node to the convTree
-            TreeNode selectedNode = convTree.SelectedNode;
+            addDisplayTextNode(null);
+            
+        }
+
+        private bool addDisplayTextNode(TreeNode selectedNode = null, dNodeDisplayText newNode = null) 
+        {
+            //if we don't have a target node just go where we're currently selected
+            if (selectedNode == null)
+            { 
+                selectedNode = convTree.SelectedNode;
+            }
             dialogTreeNode dNode = (dialogTreeNode)selectedNode;
-            dNodeDisplayText newNode = new dNodeDisplayText();
+
+            if (newNode == null)
+            {
+                newNode = new dNodeDisplayText();
+            }
 
 
             switch (dNode.sType)
-            { 
+            {
 
                 case dNodeType.displayText:
                     //if we're currently selecting a Display Text node then just place this node after
@@ -51,7 +63,7 @@ namespace DialogEditor
                 case dNodeType.responseContainer:
                     //we shouldn't be adding anything to this node
                     statusStripLabel.Text = "Can't add items other than options to an option container.";
-                    return;
+                    return false;
                     break;
 
                 default:
@@ -61,12 +73,23 @@ namespace DialogEditor
 
             selectedNode.Expand();
             convTree.SelectedNode = newNode;
-            
+
+            return true;
         }
 
         private void addDialogOptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TreeNode selectedNode = convTree.SelectedNode;
+            addUserResponseNode(null,null);
+
+        }
+
+        private bool addUserResponseNode(TreeNode selectedNode = null, dNodeUserResponse newNode = null)
+        {
+            if (selectedNode == null)
+            {
+                selectedNode = convTree.SelectedNode;
+            }
+
             dialogTreeNode dNode = (dialogTreeNode)selectedNode;
 
             //add a container for our responses if we don't already have one
@@ -96,11 +119,16 @@ namespace DialogEditor
             }
 
             //add a dialog option now
-            dNodeUserResponse responseNode = new dNodeUserResponse();
-            //responseNode.NodeFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
-            int index = selectedNode.Nodes.Add(responseNode);
+            if (newNode == null)
+            {
+                newNode = new dNodeUserResponse();
+            }
+
+            int index = selectedNode.Nodes.Add(newNode);
             selectedNode.Expand();
             convTree.SelectedNode = selectedNode.Nodes[index];
+
+            return true;
         }
 
         private void convTree_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -173,7 +201,7 @@ namespace DialogEditor
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         
@@ -298,6 +326,102 @@ namespace DialogEditor
             saveFile(sender, e);
         }
 
+        private void convTree_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void convTree_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+
+
+        //drag drop complete
+        private void convTree_DragDrop(object sender, DragEventArgs e)
+        {
+            // Retrieve the client coordinates of the drop location.
+            Point targetPoint = convTree.PointToClient(new Point(e.X, e.Y));
+
+            // Retrieve the node at the drop location.
+            TreeNode targetNode = convTree.GetNodeAt(targetPoint);
+            TreeNode draggedNode;
+            dNodeType draggedNodeType;
+
+            // Retrieve the node that was dragged.
+            if (e.Data.GetDataPresent(typeof(dNodeDisplayText)))
+            {
+                dNodeDisplayText dispTextNode = (dNodeDisplayText)e.Data.GetData(typeof(dNodeDisplayText));
+                draggedNode = dispTextNode;
+                draggedNodeType = dNodeType.displayText;
+            }
+            else if (e.Data.GetDataPresent(typeof(dNodeUserResponse)))
+            {
+                dNodeUserResponse userRespNode = (dNodeUserResponse)e.Data.GetData(typeof(dNodeUserResponse));
+                draggedNode = userRespNode;
+                draggedNodeType = dNodeType.userResponse;
+            }
+            else
+            {
+                MessageBox.Show("Can't Drag that object!");
+                return;
+            }
+           
+            // Confirm that the node at the drop location is not 
+            // the dragged node and that target node isn't null
+            // (for example if you drag outside the control)
+            if (!draggedNode.Equals(targetNode) && targetNode != null)
+            {
+                bool nodeAdded;
+
+                //targetNode.Nodes.Add(draggedNode);
+                //depending on the node we were dragging, let's make a copy of it
+                switch (draggedNodeType)
+                {
+                    case dNodeType.displayText:
+                        nodeAdded = addDisplayTextNode(targetNode, (dNodeDisplayText)draggedNode.Clone());
+                        break;
+                    case dNodeType.userResponse:
+                        nodeAdded = addUserResponseNode(targetNode, (dNodeUserResponse)draggedNode.Clone());
+                        break;
+                    default:
+                        throw new Exception("draggedNodeType doesn't match any known types.");
+                }
+
+                // Remove the node from its current location if we successfully added
+               if (nodeAdded)
+                   draggedNode.Remove();
+
+                // Expand the node at the location 
+                // to show the dropped node.
+                targetNode.Expand();
+            }
+        }
+
+        //drag event enters the convTree
+        private void convTree_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        //we're dragging and going over the tree
+        private void convTree_DragOver(object sender, DragEventArgs e)
+        {
+            //get the point we're over right now
+            Point Target = convTree.PointToClient(new Point(e.X, e.Y));
+
+            //select it on the tree
+            convTree.SelectedNode = convTree.GetNodeAt(Target);
+        }
+
+        private void convTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            //if we rightclick on a tree node we should select it
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left)
+            {
+                convTree.SelectedNode = convTree.GetNodeAt(e.X, e.Y);
+            }
+        }
 
 
     }
