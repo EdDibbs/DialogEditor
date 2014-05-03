@@ -67,7 +67,14 @@ namespace DialogEditor
                     break;
 
                 default:
-                    selectedNode.Nodes.Add(newNode);
+                    try
+                    {
+                        selectedNode.Nodes.Add(newNode);
+                    }
+                    catch (SystemException e)
+                    {
+                        return false;
+                    }
                     break;
             }
 
@@ -379,10 +386,12 @@ namespace DialogEditor
                 switch (draggedNodeType)
                 {
                     case dNodeType.displayText:
-                        nodeAdded = addDisplayTextNode(targetNode, (dNodeDisplayText)draggedNode.Clone());
+                        dNodeDisplayText dispTextNode = (dNodeDisplayText)draggedNode;
+                        nodeAdded = addDisplayTextNode(targetNode, (dNodeDisplayText)dispTextNode.Clone() );
                         break;
                     case dNodeType.userResponse:
-                        nodeAdded = addUserResponseNode(targetNode, (dNodeUserResponse)draggedNode.Clone());
+                        dNodeUserResponse userRespNode = (dNodeUserResponse)draggedNode;
+                        nodeAdded = addUserResponseNode(targetNode, (dNodeUserResponse)userRespNode.Clone() );
                         break;
                     default:
                         throw new Exception("draggedNodeType doesn't match any known types.");
@@ -427,11 +436,12 @@ namespace DialogEditor
     }
 
 
-    public partial class dialogTreeNode : TreeNode
+    public partial class dialogTreeNode : TreeNode, ICloneable
     {
         public dialogTreeNode(dNodeType type) { sType = type; }
 
         public dNodeType sType { get; set; } //sType will allow us to typecast to get all our info back
+
     }
 
     public class dNodeDisplayText : dialogTreeNode
@@ -441,6 +451,15 @@ namespace DialogEditor
 
         public string dispText  { get; set; }
 
+        public override object Clone() 
+        {
+            dNodeDisplayText clone = new dNodeDisplayText();
+            clone.dispText = this.dispText;
+            clone.Text = this.Text;
+            clone.sType = this.sType;
+
+            return clone;
+        } 
     }
 
     public class dNodeUserResponse : dialogTreeNode
@@ -449,6 +468,21 @@ namespace DialogEditor
             : base(dNodeType.userResponse) { responseText = ""; Text = "[User Response]"; }
 
         public string responseText { get; set; }
+
+        public override object Clone()
+        {
+            dNodeUserResponse clone = new dNodeUserResponse();
+            clone.responseText = this.responseText;
+            clone.Text = this.Text;
+            clone.sType = this.sType;
+
+
+            foreach (TreeNode node in this.Nodes)
+            {
+                clone.Nodes.Add((TreeNode)node.Clone());
+            }
+            return clone;
+        } 
     }
 
 }
