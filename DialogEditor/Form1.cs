@@ -405,6 +405,28 @@ namespace DialogEditor
                 draggedNode = userRespNode;
                 draggedNodeType = dNodeType.userResponse;
             }
+            else if (e.Data.GetDataPresent(typeof(dialogTreeNode)))
+            {
+                dialogTreeNode dTreeNode = (dialogTreeNode)e.Data.GetData(typeof(dialogTreeNode));
+
+                if (dTreeNode.sType == dNodeType.responseContainer)
+                {
+                    draggedNode = dTreeNode;
+                    draggedNodeType = dNodeType.responseContainer;
+                }
+
+                else if (dTreeNode.sType == dNodeType.root) 
+                {
+                    System.Media.SystemSounds.Exclamation.Play();;
+                    statusStripLabel.Text = "Can't move the root node!";
+                    return;
+                }
+                else
+                {
+                    //undefined dialog Tree Node object being dragged!
+                    return;
+                }
+            }
             else
             {
                 MessageBox.Show("Can't Drag that object!");
@@ -440,7 +462,7 @@ namespace DialogEditor
 
                 // Expand the node at the location 
                 // to show the dropped node.
-                targetNode.Expand();
+               targetNode.Expand();
             }
         }
 
@@ -480,6 +502,19 @@ namespace DialogEditor
 
         public dNodeType sType { get; set; } //sType will allow us to typecast to get all our info back
 
+        public override object Clone()
+        {
+            dialogTreeNode clone = new dialogTreeNode(this.sType);
+            clone.sType = this.sType;
+            clone.Text = this.Text;
+
+            foreach (TreeNode node in this.Nodes)
+            {
+                clone.Nodes.Add((TreeNode)node.Clone());
+            }
+            return clone;
+        }
+
     }
 
     public class dNodeDisplayText : dialogTreeNode
@@ -489,12 +524,17 @@ namespace DialogEditor
 
         public string dispText  { get; set; }
 
-        public override object Clone() 
+        public override object Clone()
         {
             dNodeDisplayText clone = new dNodeDisplayText();
             clone.dispText = this.dispText;
             clone.Text = this.Text;
             clone.sType = this.sType;
+
+            foreach (TreeNode node in this.Nodes)
+            {
+                clone.Nodes.Add((TreeNode)node.Clone());
+            }
 
             return clone;
         } 
